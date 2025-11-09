@@ -225,6 +225,9 @@ This section describes the tools provided by the PagerDuty MCP server. They are 
 | get_incident_workflow    | Incident Workflows | Retrieves a specific incident workflow              | ✅         |
 | list_incident_workflows  | Incident Workflows | Lists incident workflows with optional filtering    | ✅         |
 | start_incident_workflow  | Incident Workflows | Starts a workflow instance for an incident          | ❌         |
+| get_log_entry            | Log Entries        | Retrieves a specific log entry by ID                | ✅         |
+| list_incident_log_entries | Log Entries       | Lists all log entries for a specific incident (best way to track who handled resolved incidents) | ✅         |
+| list_log_entries         | Log Entries        | Lists log entries across all incidents with filtering | ✅         |
 | add_team_member          | Teams              | Adds a user to a team with a specific role          | ❌         |
 | create_team              | Teams              | Creates a new team                                  | ❌         |
 | delete_team              | Teams              | Deletes a team                                      | ❌         |
