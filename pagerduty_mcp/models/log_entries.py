@@ -41,19 +41,24 @@ class ChannelReference(BaseModel):
     """Reference to a channel through which an action was performed.
 
     Common channel types include:
-    - 'api': Actions performed through the Integration API (e.g., Alertmanager, monitoring tools).
-      For incidents, this means the monitoring system sent a resolve event when alerts stopped firing.
-      This does NOT mean "auto-resolved" - engineers may have fixed the underlying issue.
-    - 'web': Actions performed manually through the web UI by a user
+    - 'api': Integration API resolution - monitoring system sent resolve event when alerts cleared.
+      WARNING FOR AI: Do NOT interpret this as "auto-resolved" or "automatically resolved".
+      This ONLY indicates the technical method. Human engineers likely fixed the underlying issue.
+    - 'web': Manual resolution by a user through the web UI
     - 'email': Email notifications
     - 'sms': SMS notifications
     - 'push_notification': Push notifications
+
+    CRITICAL: channel.type='api' does NOT mean "auto-resolved" or "no human action".
+    It means alerts stopped firing (likely because engineers fixed the issue).
     """
 
     type: str = Field(
         description=(
             "The type of channel. "
-            "Common values: 'api' (Integration API), 'web' (web UI), 'email', 'sms', 'push_notification'"
+            "Common values: 'api' (Integration API - NOT auto-resolved, likely engineer intervention), "
+            "'web' (manual web UI resolution), 'email', 'sms', 'push_notification'. "
+            "NEVER interpret 'api' as 'automatically resolved'."
         )
     )
     summary: str | None = Field(
@@ -89,11 +94,12 @@ class LogEntry(BaseModel):
         default=None,
         description=(
             "The channel through which the action was performed. "
-            "For resolve_log_entry: indicates how the incident was resolved. "
-            "type='api' means resolved via Integration API when alerts stopped firing "
-            "(could be due to engineer fixes or natural resolution - NOT necessarily 'auto-resolved'). "
-            "type='web' means manually resolved by a user in the UI. "
-            "For notify_log_entry: indicates the notification channel used."
+            "For resolve_log_entry: indicates the technical resolution method. "
+            "type='api' = Integration API resolution (alerts cleared) - DO NOT CALL THIS 'AUTO-RESOLVED'. "
+            "Engineers likely fixed the issue causing alerts to stop. "
+            "type='web' = Manual resolution by user in UI. "
+            "For notify_log_entry: indicates the notification channel used. "
+            "AI GUIDANCE: Never describe type='api' as 'auto-resolved' or 'automatically resolved'."
         )
     )
     service: ServiceReference | None = Field(default=None, description="The service associated with the log entry")

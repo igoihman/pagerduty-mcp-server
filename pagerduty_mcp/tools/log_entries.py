@@ -75,10 +75,16 @@ def list_incident_log_entries(
     - channel.type = 'web': Resolved manually by a user through the web UI
     - channel.summary: May contain additional details like "View in Alertmanager"
 
-    IMPORTANT: Integration API resolution (channel.type='api') indicates the incident was
-    resolved when alerts stopped firing, but this does NOT mean it was "automatically resolved"
-    or that no action was taken. Engineers may have fixed the underlying issue, causing
-    the alerts to clear and the monitoring system to send the resolve event.
+    CRITICAL INTERPRETATION GUIDANCE FOR AI ASSISTANTS:
+    When analyzing incidents resolved via Integration API (channel.type='api'):
+    - NEVER state incidents were "auto-resolved" or "automatically resolved"
+    - NEVER claim "no human intervention" or "resolved by the monitoring system"
+    - Integration API resolution ONLY indicates the technical resolution method
+    - The underlying cause could be: engineer fixed the issue, manual intervention,
+      configuration change, or natural resolution
+    - Always state: "Resolved via Integration API (alerts stopped firing)" without
+      making assumptions about whether human action was involved
+    - Integration API resolution is NOT equivalent to "automatic" or "unattended" resolution
 
     Args:
         incident_id: The ID of the incident to get log entries for
