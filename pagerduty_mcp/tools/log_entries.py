@@ -68,9 +68,17 @@ def list_incident_log_entries(
     is resolved), log entries persist and provide the full historical record.
 
     To determine HOW an incident was resolved, check the resolve_log_entry:
-    - channel.type = 'api': Resolved through Integration API (e.g., Alertmanager)
-    - channel.type = 'web': Resolved manually through the web UI
+    - channel.type = 'api': Resolved through Integration API when the monitoring system
+      (e.g., Alertmanager) sent a resolve signal because the alert stopped firing.
+      This happens when an engineer fixes the issue OR the condition naturally resolves.
+      DO NOT assume this means "auto-resolved" - it simply means resolved via the integration.
+    - channel.type = 'web': Resolved manually by a user through the web UI
     - channel.summary: May contain additional details like "View in Alertmanager"
+
+    IMPORTANT: Integration API resolution (channel.type='api') indicates the incident was
+    resolved when alerts stopped firing, but this does NOT mean it was "automatically resolved"
+    or that no action was taken. Engineers may have fixed the underlying issue, causing
+    the alerts to clear and the monitoring system to send the resolve event.
 
     Args:
         incident_id: The ID of the incident to get log entries for

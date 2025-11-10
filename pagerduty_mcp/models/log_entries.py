@@ -41,8 +41,10 @@ class ChannelReference(BaseModel):
     """Reference to a channel through which an action was performed.
 
     Common channel types include:
-    - 'api': Actions performed through the Integration API (e.g., Alertmanager, monitoring tools)
-    - 'web': Actions performed manually through the web UI
+    - 'api': Actions performed through the Integration API (e.g., Alertmanager, monitoring tools).
+      For incidents, this means the monitoring system sent a resolve event when alerts stopped firing.
+      This does NOT mean "auto-resolved" - engineers may have fixed the underlying issue.
+    - 'web': Actions performed manually through the web UI by a user
     - 'email': Email notifications
     - 'sms': SMS notifications
     - 'push_notification': Push notifications
@@ -87,8 +89,10 @@ class LogEntry(BaseModel):
         default=None,
         description=(
             "The channel through which the action was performed. "
-            "For resolve_log_entry: indicates how the incident was resolved "
-            "(e.g., type='api' for Integration API, type='web' for manual resolution). "
+            "For resolve_log_entry: indicates how the incident was resolved. "
+            "type='api' means resolved via Integration API when alerts stopped firing "
+            "(could be due to engineer fixes or natural resolution - NOT necessarily 'auto-resolved'). "
+            "type='web' means manually resolved by a user in the UI. "
             "For notify_log_entry: indicates the notification channel used."
         )
     )
