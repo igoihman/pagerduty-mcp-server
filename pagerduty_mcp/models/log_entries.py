@@ -38,10 +38,26 @@ class IncidentReference(BaseModel):
 
 
 class ChannelReference(BaseModel):
-    """Reference to a notification channel."""
+    """Reference to a channel through which an action was performed.
 
-    type: str = Field(description="The type of notification channel (e.g., 'email', 'sms', 'push_notification')")
-    summary: str | None = Field(default=None, description="Summary of the channel")
+    Common channel types include:
+    - 'api': Actions performed through the Integration API (e.g., Alertmanager, monitoring tools)
+    - 'web': Actions performed manually through the web UI
+    - 'email': Email notifications
+    - 'sms': SMS notifications
+    - 'push_notification': Push notifications
+    """
+
+    type: str = Field(
+        description=(
+            "The type of channel. "
+            "Common values: 'api' (Integration API), 'web' (web UI), 'email', 'sms', 'push_notification'"
+        )
+    )
+    summary: str | None = Field(
+        default=None,
+        description="Summary or additional details about the channel (e.g., 'View in Alertmanager' for API integrations)"
+    )
 
 
 class LogEntry(BaseModel):
@@ -68,7 +84,13 @@ class LogEntry(BaseModel):
         "For acknowledge_log_entry, this is the user who acknowledged it.",
     )
     channel: ChannelReference | None = Field(
-        default=None, description="The notification channel (for notify_log_entry types)"
+        default=None,
+        description=(
+            "The channel through which the action was performed. "
+            "For resolve_log_entry: indicates how the incident was resolved "
+            "(e.g., type='api' for Integration API, type='web' for manual resolution). "
+            "For notify_log_entry: indicates the notification channel used."
+        )
     )
     service: ServiceReference | None = Field(default=None, description="The service associated with the log entry")
     incident: IncidentReference = Field(description="The incident this log entry is associated with")

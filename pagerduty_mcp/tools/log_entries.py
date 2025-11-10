@@ -59,12 +59,18 @@ def list_incident_log_entries(
     This is the recommended way to track who handled an incident, especially for
     resolved incidents. The log entries provide a complete audit trail including:
     - Who resolved the incident (resolve_log_entry)
+    - How the incident was resolved (check channel.type: 'api' for Integration API, 'web' for manual)
     - Who acknowledged the incident (acknowledge_log_entry)
     - Who was assigned to the incident (assign_log_entry)
     - All other actions taken on the incident
 
     Unlike the assignments field on incidents (which is cleared when an incident
     is resolved), log entries persist and provide the full historical record.
+
+    To determine HOW an incident was resolved, check the resolve_log_entry:
+    - channel.type = 'api': Resolved through Integration API (e.g., Alertmanager)
+    - channel.type = 'web': Resolved manually through the web UI
+    - channel.summary: May contain additional details like "View in Alertmanager"
 
     Args:
         incident_id: The ID of the incident to get log entries for
